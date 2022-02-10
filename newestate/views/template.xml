@@ -1,57 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="hello_world" name="Hello World">
-        <h4>
-            <strong>Hello World</strong>
-        </h4>
+        <t t-call="website.layout">
+            <h4>
+                <strong>Hello World</strong>
+            </h4>
+        </t>
     </template>
 
-    <template id="hello_user">
+    <template id="dynamic_template">
         <div>
             <t t-out="SomeAdditionalData"/>
         </div>
+        <center>
         <div class="table">
             <table>
                 <thead>
-                    <th>Sequence</th>
+                    <th>No.</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>State</th>
                 </thead>
                 <tbody>
                     <t t-set="sequence" t-value="0"/>
-                    <t t-foreach="properties" t-as="course">
+                    <t t-foreach="properties" t-as="property">
                         <t t-set="sequence" t-value="sequence + 1"/>
-                        <!-- <tr t-att-class="sequence % 2 == 0 and 'o_even' or ''"> -->
-                        <tr t-attf-style="font-weight: bold;#{sequence % 2 == 0 and 'background: green;' or ''}">
+                        <tr t-attf-style="font-weight: bold;#{sequence % 2 == 0 and 'background: grey;' or ''}">
                             <td>
                                 <t t-out="sequence"/>
                             </td>
+
                             <td>
-                                <t t-out="course.name"/>
+                                <a t-attf-href="/property/#{property.id}">
+                                    <t t-out="property.name"/>
+                                </a>
                             </td>
                             <td>
-                                <t t-if="course.description" t-out="course.description"/>
+                                <t t-if="property.description" t-out="property.description"/>
                                 <t t-else="">No Description Available</t>
                             </td>
                             <td>
-                                <span t-field="course.state"/>
+                                <span t-field="property.state"/>
                             </td>
                         </tr>
                     </t>
                 </tbody>
             </table>
         </div>
+        </center>
     </template>
 
-    <template id="hello_user" name="Bla Bla">
-        <h4>
-            <strong>Hello
-                <t t-out="user.name"/>
-            </strong>
-        </h4>
-        <t t-call="newestate.courses_list">
-            <t t-set="SomeAdditionalData">Hello</t>
+    <template id="hello_user" name="hello user">
+        <t t-call="website.layout">
+            <center>
+                <h4>
+                    <strong>Hello
+                        <t t-out="user.name"/>
+                    </strong>
+                </h4>
+            </center>
+            <t t-call="newestate.dynamic_template">
+            </t>
         </t>
     </template>
 

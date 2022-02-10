@@ -33,7 +33,7 @@ class estate_property(models.Model):
     property_type_id = fields.Many2one('property.type')
     property_tag_id = fields.Many2many('estate.tag')
     property_offer_id = fields.One2many('estate.offer', 'property_id')
-    offer_ids = fields.One2many('estate.offer', 'property_id', 'property.type"')
+    offer_ids = fields.One2many('estate.offer', 'property_id')
     total_area = fields.Integer(compute="_total_area", inverse="_inverse_area", search="_search_area")
     best_offer = fields.Float(compute="_best_prize")
     partner_id = fields.Many2one('res.partner')
@@ -42,9 +42,6 @@ class estate_property(models.Model):
     buyer_id = fields.Many2one('res.partner')
     state = fields.Selection([('new', 'New'), ('sold', 'Sold'), ('cancel', 'Cancelled')], default='new')
 
-    # partner_ids = fields.Many2o('res.partner')
-    # p_name = fields.Char(related='offer_ids.partner_id.name', string="OFFER NAME")
-    # partner = fields.Char(related='partner_ids.partner_id.name', string="partner")
 
     def _get_description(self):
         if self.env.context.get('is_my_property'):
@@ -52,17 +49,17 @@ class estate_property(models.Model):
 
     def _search_area(self, operator, value):
         self.env.cr.execute(
-            "SELECT id from estate.properties where total_area::%s %s" % (operator, value))
+            "SELECT id from estate_properties where total_area::%s %s" % (operator, value))
         ids = self.env.cr.fetchall()
         return [('id', 'in', [id[0] for id in ids])]
 
     def action_sold(self):
-        # print("\n\n In action sold")
+       
         for record in self:
             if record.state == 'cancel':
                 raise UserError("Cancel Property cannot be sold")
             return record.write({'state': 'sold'})
-            # return some action
+          
 
     def action_cancel(self):
         for record in self:
@@ -134,16 +131,6 @@ class estate_property(models.Model):
                 raise UserError("expected prize is not null")
 
 
-# class Leased_property(models.Model):
-#     _name ="lease.property"
-#     _inherits ={'estate.properties':'lease_id'}
-
-#     lease_id = fields.Many2one('estate.properties')
-#     lease_duration = fields.Float()
-#     lease_rent = fields.Float()
-#     prise = fields.Float()
-#     lease_date = fields.Date()
-
 
 class estate_property_type(models.Model):
     _name = "property.type"
@@ -161,7 +148,7 @@ class Extended_property_type(models.Model):
     internal_property = fields.Text()
 
 
-class Extended_property_type(models.Model):
+class Extended_property_type1(models.Model):
     _inherit = "property.type"
 
     internal_property = fields.Text()

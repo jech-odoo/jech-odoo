@@ -293,8 +293,7 @@
 
 
                 <group expand="1" string="Group By">
-                    <!-- <filter string="my properties" name="partner_id" context="{'group_by': 'partner_id'}"/>
-                       -->
+
                     <filter name="create_uid" string="MY PROPERTY" domain="[('create_uid', '=', uid)]"/>
 
                 </group>
